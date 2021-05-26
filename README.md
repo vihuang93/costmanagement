@@ -45,6 +45,6 @@ Response:
 
 # Database Table Created:
 
-1) show_episode_amount(table name): this table stores each cost transaction for an episode, a show can have multiple episodes, a episode of a show can have multiple cost amount. Index on show_id, it can return multiple rows.
+1) show_episode_amount(table name): this table stores each cost transaction for an episode, this table can have multiple shows, a show can have multiple episodes, a episode of a show can have multiple cost amount. Index on show_id, it can return multiple rows.
 
 show_id | episode_code| amount
