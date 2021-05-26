@@ -4,7 +4,7 @@
 
 Description: Get a list of aggregated costs of each episode for one show, {id} is the show id. 
 
-GET: /costs/{id}
+GET: /costs/{id} This endpoint is designed to work for both episodic or non-episodic shows
 Response:
 1) 200 ok
 {
