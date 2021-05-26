@@ -1,10 +1,25 @@
-package com.costs.costmanagement.datamodel;
+package com.costs.costmanagement.datamodels;
 
+import javax.persistence.*;
+
+/*
+ This is the db model for SHOW_EPISODE_COSTS
+ */
+@Entity
+@Table(name = "SHOW_EPISODE_COSTS")
 public class ShowEpisodeCost {
 
+    @Id
+    @Column
     private Long id;
+
+    @Column
     private Integer episodeCd;
+
+    @Column
     private Long amount;
+
+    public ShowEpisodeCost(){}
 
     public ShowEpisodeCost(Long id, Integer episodeCd, Long amount){
         this.id = id;

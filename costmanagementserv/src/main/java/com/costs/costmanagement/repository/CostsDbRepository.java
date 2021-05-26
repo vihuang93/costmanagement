@@ -1,10 +1,10 @@
 package com.costs.costmanagement.repository;
 
 import com.costs.costmanagement.dao.ShowEpisodeCostDAO;
-import com.costs.costmanagement.datamodel.ShowEpisodeCost;
+import com.costs.costmanagement.datamodels.ShowEpisodeCost;
 import org.springframework.stereotype.Repository;
-import javax.inject.Inject;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @Repository
@@ -25,6 +25,7 @@ public class CostsDbRepository {
     public boolean createCost(Long id, Integer episodeCd, Long amount){
         ShowEpisodeCost newShowEpisodeCost = new ShowEpisodeCost(id, episodeCd, amount);
         int updatedRow = showEpisodeCostDAO.insertEpisodeCost(newShowEpisodeCost);
+        // TODO: update status code, idempotent should return 200, created 201
         if(updatedRow == 1){
             // success
             return true;

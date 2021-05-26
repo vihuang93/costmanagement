@@ -1,6 +1,6 @@
 package com.costs.costmanagement.dao;
 
-import com.costs.costmanagement.datamodel.ShowEpisodeCost;
+import com.costs.costmanagement.datamodels.ShowEpisodeCost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -8,6 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+/*
+ This is the DAO layer SHOW_EPISODE_COSTS
+ */
 
 @Repository
 public class ShowEpisodeCostDAO {

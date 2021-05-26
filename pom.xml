@@ -9,7 +9,6 @@
 
     <modules>
         <module>costmanagementserv</module>
-        <module>relational-data-access</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
