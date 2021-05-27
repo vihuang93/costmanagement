@@ -26,9 +26,13 @@ public class CostmanagementservApplication {
 		SpringApplication.run(CostmanagementservApplication.class, args);
 	}
 	/**
-	 * Get aggregated production cost for all episodes, without Amortized costs. This endpoint is for TASK3
-	 *  This should work for both TASK 1 & 2
+	 *
+	 * @param id show id
+	 * @return list of aggregated episode cost, excluding amortized costs.
+	 *
+	 * This should work for both TASK 1 & 2
 	 */
+
 	@GetMapping("/costs/{id}")
 	public ResponseEntity<List<ShowEpisodeCostAPIModel>> getBasicCost(@PathVariable Long id) {
 		List<ShowEpisodeCost> doObjects = this.costsDbRepository.getAggregatEpisodeCostsForShowWithoutAmortizedCost(id);
@@ -45,8 +49,13 @@ public class CostmanagementservApplication {
 			return ResponseEntity.ok(costReport);
 		}
 	}
-
-	// This should work for both TASK 1 & 2
+	/**
+	 *
+	 * @param showEpisodeCost json object include show id, episode code, and cost amount
+	 * @return created episode cost object
+	 *
+	 *  This should work for both TASK 1 & 2
+	 */
 	@PostMapping("/costs")
 	@ResponseBody
 	public ResponseEntity<ShowEpisodeCostAPIModel> createCost(@RequestBody ShowEpisodeCostAPIModel showEpisodeCost) {
@@ -73,7 +82,13 @@ public class CostmanagementservApplication {
 	}
 
 	/**
-	 * Get aggregated production cost for all episodes, including Amortized costs. This endpoint is for TASK3
+	 *
+	 * @param id show id
+	 * @return list of aggregated episode cost, including amortized costs
+	 *
+	 * 	Get aggregated production cost for all episodes, including Amortized costs.
+	 * 	This endpoint is for TASK 3
+	 *
 	 */
 	@GetMapping("/prodcosts/{id}")
 	public ResponseEntity<List<ShowEpisodeCostAPIModel>> getProductionCost(@PathVariable Long id) {
