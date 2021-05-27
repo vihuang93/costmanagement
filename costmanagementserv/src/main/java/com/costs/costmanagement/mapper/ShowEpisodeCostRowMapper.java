@@ -11,7 +11,7 @@ public class ShowEpisodeCostRowMapper implements RowMapper<ShowEpisodeCost> {
     public ShowEpisodeCost mapRow(ResultSet resultSet, int i) throws SQLException {
         ShowEpisodeCost showEpisodeCost = new ShowEpisodeCost();
         showEpisodeCost.setID(resultSet.getLong("ID"));
-        showEpisodeCost.setEPISODE_CODE(resultSet.getInt("EPISODE_CODE"));
+        showEpisodeCost.setEPISODE_CODE(resultSet.getString("EPISODE_CODE"));
         showEpisodeCost.setAMOUNT(resultSet.getLong("AMOUNT"));
         return showEpisodeCost;
     }

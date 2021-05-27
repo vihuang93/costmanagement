@@ -25,10 +25,13 @@ public class CostmanagementservApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CostmanagementservApplication.class, args);
 	}
-	// TODO: for show id, list aggregate costs for each episode
+	/**
+	 * Get aggregated production cost for all episodes, without Amortized costs. This endpoint is for TASK3
+	 *  This should work for both TASK 1 & 2
+	 */
 	@GetMapping("/costs/{id}")
 	public ResponseEntity<List<ShowEpisodeCostAPIModel>> getBasicCost(@PathVariable Long id) {
-		List<ShowEpisodeCost> doObjects = this.costsDbRepository.getAggregatEpisodeCostsForShow(id);
+		List<ShowEpisodeCost> doObjects = this.costsDbRepository.getAggregatEpisodeCostsForShowWithoutAmortizedCost(id);
 		List<ShowEpisodeCostAPIModel> costReport = doObjects.stream().map(doObject ->{
 			ShowEpisodeCostAPIModel apiModel = new ShowEpisodeCostAPIModel();
 			apiModel.setAmount(doObject.getAmount().toString());
@@ -43,13 +46,13 @@ public class CostmanagementservApplication {
 		}
 	}
 
-	//TODO: store a episode cost for a show.
+	// This should work for both TASK 1 & 2
 	@PostMapping("/costs")
 	@ResponseBody
 	public ResponseEntity<ShowEpisodeCostAPIModel> createCost(@RequestBody ShowEpisodeCostAPIModel showEpisodeCost) {
 
 		Optional<ShowEpisodeCost> createdShowEpisodeCost = this.costsDbRepository.createCost(Long.parseLong(showEpisodeCost.getId()),
-				Integer.parseInt(showEpisodeCost.getEpisode_code()),Long.parseLong(showEpisodeCost.getAmount()));
+				showEpisodeCost.getEpisode_code(),Long.parseLong(showEpisodeCost.getAmount()));
 		// 201 created
 		if(createdShowEpisodeCost.isPresent()){
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -66,6 +69,26 @@ public class CostmanagementservApplication {
 		} else {
 			// 200 ok
 			return ResponseEntity.ok().build();
+		}
+	}
+
+	/**
+	 * Get aggregated production cost for all episodes, including Amortized costs. This endpoint is for TASK3
+	 */
+	@GetMapping("/prodcosts/{id}")
+	public ResponseEntity<List<ShowEpisodeCostAPIModel>> getProductionCost(@PathVariable Long id) {
+		List<ShowEpisodeCost> doObjects = this.costsDbRepository.getProductionCostsIncludingAmortizedCost(id);
+		List<ShowEpisodeCostAPIModel> costReport = doObjects.stream().map(doObject ->{
+			ShowEpisodeCostAPIModel apiModel = new ShowEpisodeCostAPIModel();
+			apiModel.setAmount(doObject.getAmount().toString());
+			apiModel.setEpisode_code(doObject.getEpisodeCd());
+			apiModel.setId(doObject.getId().toString());
+			return apiModel; }).collect(Collectors.toList());
+
+		if (costReport.size() == 0) {
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok(costReport);
 		}
 	}
 }

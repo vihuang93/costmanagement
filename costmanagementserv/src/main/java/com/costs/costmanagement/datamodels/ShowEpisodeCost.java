@@ -14,14 +14,14 @@ public class ShowEpisodeCost {
     private Long id;
 
     @Column(name = "EPISODE_CODE")
-    private Integer episodeCd;
+    private String episodeCd;
 
     @Column(name = "AMOUNT")
     private Long amount;
 
     public ShowEpisodeCost(){}
 
-    public ShowEpisodeCost(Long id, Integer episodeCd, Long amount){
+    public ShowEpisodeCost(Long id, String episodeCd, Long amount){
         this.id = id;
         this.episodeCd = episodeCd;
         this.amount = amount;
@@ -35,11 +35,11 @@ public class ShowEpisodeCost {
         this.id = id;
     }
 
-    public Integer getEpisodeCd() {
+    public String getEpisodeCd() {
         return episodeCd;
     }
 
-    public void setEPISODE_CODE(Integer episodeCd) {
+    public void setEPISODE_CODE(String episodeCd) {
         this.episodeCd = episodeCd;
     }
 
