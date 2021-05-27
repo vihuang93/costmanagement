@@ -10,13 +10,13 @@ import javax.persistence.*;
 public class ShowEpisodeCost {
 
     @Id
-    @Column
+    @Column(name = "ID")
     private Long id;
 
-    @Column
+    @Column(name = "EPISODE_CODE")
     private Integer episodeCd;
 
-    @Column
+    @Column(name = "AMOUNT")
     private Long amount;
 
     public ShowEpisodeCost(){}

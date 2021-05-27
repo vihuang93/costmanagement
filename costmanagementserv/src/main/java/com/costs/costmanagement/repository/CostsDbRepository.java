@@ -5,7 +5,10 @@ import com.costs.costmanagement.datamodels.ShowEpisodeCost;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class CostsDbRepository {
@@ -18,19 +21,22 @@ public class CostsDbRepository {
     }
     public List<ShowEpisodeCost> getAggregatEpisodeCostsForShow(Long id){
         List<ShowEpisodeCost> list = showEpisodeCostDAO.findAllEpisodeCostsByShowId(id);
-        // TODO: add up all costs for one episode and return: episodeCd, aggregateAmount
-        return list;
+        List<ShowEpisodeCost> aggregatedList = new ArrayList<>();
+        // therefore group by episode code
+        list.stream().collect(Collectors.groupingBy(ShowEpisodeCost::getEpisodeCd, Collectors.summingLong(ShowEpisodeCost::getAmount)))
+  .forEach((cd,sumTargetCost)->aggregatedList.add(new ShowEpisodeCost(id, cd,sumTargetCost)));
+
+        return aggregatedList;
     }
 
-    public boolean createCost(Long id, Integer episodeCd, Long amount){
+    public Optional<ShowEpisodeCost> createCost(Long id, Integer episodeCd, Long amount){
         ShowEpisodeCost newShowEpisodeCost = new ShowEpisodeCost(id, episodeCd, amount);
         int updatedRow = showEpisodeCostDAO.insertEpisodeCost(newShowEpisodeCost);
-        // TODO: update status code, idempotent should return 200, created 201
         if(updatedRow == 1){
             // success
-            return true;
+            return Optional.of(newShowEpisodeCost);
         } else {
-            return false;
+            return Optional.empty();
         }
     }
 }

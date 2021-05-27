@@ -1,9 +1,9 @@
 package com.costs.costmanagement.dao;
 
 import com.costs.costmanagement.datamodels.ShowEpisodeCost;
+import com.costs.costmanagement.mapper.ShowEpisodeCostRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,11 +23,8 @@ public class ShowEpisodeCostDAO {
     private static final String INSERT_SQL = "INSERT INTO SHOW_EPISODE_COSTS (ID, EPISODE_CODE, AMOUNT) VALUES (?,?,?) ";
 
     public List<ShowEpisodeCost> findAllEpisodeCostsByShowId(final Long id) throws DataAccessException {
-        BeanPropertyRowMapper<ShowEpisodeCost> mapper = BeanPropertyRowMapper.newInstance(ShowEpisodeCost.class);
-
         List<ShowEpisodeCost> showEpisodeCostList = jdbcTemplate.query(SELECT_BY_SHOW_ID,
-                new Object[] { id },
-                mapper);
+                new ShowEpisodeCostRowMapper(), id);
         return showEpisodeCostList;
     }
     public int insertEpisodeCost(ShowEpisodeCost showEpisodeCost) throws DataAccessException {
