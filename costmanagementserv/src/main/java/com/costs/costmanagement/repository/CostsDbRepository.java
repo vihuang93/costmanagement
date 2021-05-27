@@ -101,7 +101,6 @@ public class CostsDbRepository {
         return aggregatedList;
     }
 
-
     /**
      *
      * @param id show id

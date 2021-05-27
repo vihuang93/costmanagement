@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,34 +53,33 @@ public class CostmanagementservApplication {
 	}
 	/**
 	 *
-	 * @param showEpisodeCost json object include show id, episode code, and cost amount
+	 * @param showEpisodeCostList json object include list of show id, episode code, and cost amount
 	 * @return created episode cost object
 	 *
 	 *  This should work for both TASK 1 & 2
 	 */
 	@PostMapping("/costs")
 	@ResponseBody
-	public ResponseEntity<ShowEpisodeCostAPIModel> createCost(@RequestBody ShowEpisodeCostAPIModel showEpisodeCost) {
+	public ResponseEntity<List<ShowEpisodeCostAPIModel>> createCost(@RequestBody @Valid List<ShowEpisodeCostAPIModel> showEpisodeCostList) {
 
-		Optional<ShowEpisodeCost> createdShowEpisodeCost = this.costsDbRepository.createCost(Long.parseLong(showEpisodeCost.getId()),
-				showEpisodeCost.getEpisode_code(),Long.parseLong(showEpisodeCost.getAmount()));
-		// 201 created
-		if(createdShowEpisodeCost.isPresent()){
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-					.path("/costs")
-					.buildAndExpand(showEpisodeCost.getId())
-					.toUri();
-			// map db object to api object
-			ShowEpisodeCostAPIModel showEpisodeCostAPIModel = new ShowEpisodeCostAPIModel();
-			showEpisodeCostAPIModel.setId(String.valueOf(createdShowEpisodeCost.get().getId()));
-			showEpisodeCostAPIModel.setEpisode_code(String.valueOf(createdShowEpisodeCost.get().getEpisodeCd()));
-			showEpisodeCostAPIModel.setAmount(String.valueOf(createdShowEpisodeCost.get().getAmount()));
+		List<ShowEpisodeCostAPIModel> createdList = new ArrayList<>();
+		for(ShowEpisodeCostAPIModel showEpisodeCostAPIModel:showEpisodeCostList) {
+			Optional<ShowEpisodeCost> createdEpisodeCost = this.costsDbRepository.createCost(Long.parseLong(showEpisodeCostAPIModel.getId()), showEpisodeCostAPIModel.getEpisode_code(),
+					Long.parseLong(showEpisodeCostAPIModel.getAmount()));
+			if(createdEpisodeCost.isPresent()){
+				ShowEpisodeCostAPIModel createdEpisodeCostApi = new ShowEpisodeCostAPIModel();
+				createdEpisodeCostApi.setId(String.valueOf(createdEpisodeCost.get().getId()));
+				createdEpisodeCostApi.setEpisode_code(String.valueOf(createdEpisodeCost.get().getEpisodeCd()));
+				createdEpisodeCostApi.setAmount(String.valueOf(createdEpisodeCost.get().getAmount()));
 
-			return ResponseEntity.created(uri).body(showEpisodeCostAPIModel);
-		} else {
-			// 200 ok
-			return ResponseEntity.ok().build();
+				createdList.add(createdEpisodeCostApi);
+			}
 		}
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/costs")
+				.buildAndExpand(createdList)
+				.toUri();
+		return ResponseEntity.created(uri).body(createdList);
 	}
 
 	/**
