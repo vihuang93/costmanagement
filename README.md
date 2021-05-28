@@ -5,6 +5,11 @@
 2) do mvn clean install -U locally
 3) Go to CostmanagementservApplication.java, right click to start application
 4) Use below Postman Collection link to trigger requests
+5) For database use, I used in-memory h2 relational database. Table creation is located at data.sql. 
+Once application started, you can visit http://localhost:8080/h2-console to see the table UI. Below are the username and password to login:
+username=sa
+password=password
+Note: This info is stored in application.properties, feel free to change to your own on your local.
 ```
 # Postman Collections
 
@@ -110,7 +115,15 @@ Reason: missing "id" field.
 ]
 ```
 # corner cases tested
+```
 1) POST creation, if no record created, it should return 200 instead of 201.
 2) GET operation, if no record found, it should retun 404.
 3) POST creation, able to receive empty list, however it returns 200.
-
+```
+# Things can be improved
+```
+1) Mentioned corner cases/error case scenarios are all tested by postman. Only partial unit tests are covered. Could have better coverage on UT. FT is not added, DAO test is not added here either.
+2) For 400 validation errors, could have add detail error msgs to clients, due to limited time, won't add here.
+3) If to scale this service, could modulize the code into different modules. This current model is intended only for this code practice.
+4) Used jackson JSON library here, would better have submodule for api data model definitions as well as api definitions.
+```
