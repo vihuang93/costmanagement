@@ -19,7 +19,7 @@ https://www.getpostman.com/collections/32d3710e1507ccb619b2
 
 Description: Get a list of aggregated costs of each episode for one show, {id} is the show id. 
 
- # a) GET: /costs/{id} 
+ ##  a) GET: /costs/{id} 
  This is to get cost report for all episodes of a show, excluding amortized costs. 
  This endpoint is designed to work for both episodic or non-episodic shows
 Response:
@@ -49,7 +49,7 @@ Note: each amount is the aggregated amount here. episode_code is unique
 
 Scenario when there is no episode cost for a show. Therefore no corresponding record in our database, throw NOT FOUND exception.
 
-# b) POST: /costs/{id}
+##  b) POST: /costs/{id}
 This endpoint is to create a cost transaction for an episode (an episode of a show, you need to provide which show this episode is for. )
  This endpoint is designed to work for both episodic or non-episodic shows
 
@@ -69,7 +69,7 @@ Request Body:
 2) 400 Validation error can be thrown, See detail in the 'bad data' section
 3) 200 Ok, scenario when no data is inserted
 
-#  c) GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
+##   c) GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
 
 Response:
 Note: response body is the same pattern as GET /costs/{id}
