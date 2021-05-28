@@ -67,6 +67,7 @@ Request Body:
 ```
 
 2) 400 Validation error can be thrown, See detail in the 'bad data' section
+3) 200 Ok, scenario when no data is inserted
 
 #  3. GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
 
