@@ -54,7 +54,7 @@ Response:
 #  GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
 
 
-# Database Table Created:
+# Database Table Created: Used in-memory h2 relational database. Table creation is located at data.sql
 
 1) show_episode_amount(table name): this table stores each cost transaction for an episode, this table can have multiple shows, a show can have multiple episodes, a episode of a show can have multiple cost amount. Index on show_id, it can return multiple rows.
 
