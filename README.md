@@ -89,7 +89,7 @@ show_id | episode_code| amount
 ```
 # 5. “bad data”
 1)  POST creation, unrecognized request body calling POST, return 400 bad request
-  Reason: 'episode_co' is not a valid field
+  ###### Reason: 'episode_co' is not a valid field
   ```
      [{
     "id":"4",
@@ -99,7 +99,7 @@ show_id | episode_code| amount
     ]
  ```
  2)  POST creation, Episode code length != 3, , return 400 bad request
- Reason: episode_code length is not 3
+ ###### Reason: episode_code length is not 3
 ```
   [{
       "id":"4",
@@ -109,7 +109,7 @@ show_id | episode_code| amount
   ]
 ```
 3)  POST creation, request object missing field 
-Reason: missing "id" field.
+###### Reason: missing "id" field.
 ```
 [{
     
