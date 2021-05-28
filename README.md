@@ -42,6 +42,8 @@ Scenario when there is no episode cost for a show. Therefore no corresponding re
 This endpoint is to create a cost transaction for an episode (an episode of a show, you need to provide which show this episode is for. )
  This endpoint is designed to work for both episodic or non-episodic shows
 
+Response:
+1) 201 Created
 Request Body:
 ```
 {
@@ -52,8 +54,7 @@ Request Body:
     }
 }
 ```
-Response:
-1) 201 Created
+
 2) 400 Validation error can be thrown, See detail in the 'bad data' section
 
 #  3. GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
@@ -68,9 +69,9 @@ Note: response body is the same pattern as GET /costs/{id}
 # Database Table Created: Used in-memory h2 relational database. Table creation is located at data.sql
 
 1) show_episode_amount(table name): this table stores each cost transaction for an episode, this table can have multiple shows, a show can have multiple episodes, a episode of a show can have multiple cost amount. Index on show_id, it can return multiple rows.
-
+```
 show_id | episode_code| amount
-
+```
 # “bad data”
 1)  POST creation, unrecognized request body calling POST, return 400 bad request
   Reason: 'episode_co' is not a valid field
