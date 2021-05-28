@@ -1,5 +1,5 @@
 # costmanagementserv
-# How to run this application?
+# 1. How to run this application?
 ```
 1) Clone this git repo
 2) Do mvn clean install -U locally
@@ -11,15 +11,15 @@ username=sa
 password=password
 Note: This info is stored in application.properties, feel free to change to your own on your local.
 ```
-# Postman Collections
+# 2. Postman Collections
 
 https://www.getpostman.com/collections/32d3710e1507ccb619b2
 
-# 3 Proposed APIs(Details can be found in the pr, attached postman request and response for better understanding.)
+# 3. 3 Proposed APIs(Details can be found in the pr, attached postman request and response for better understanding.)
 
 Description: Get a list of aggregated costs of each episode for one show, {id} is the show id. 
 
- # 1. GET: /costs/{id} 
+ # a) GET: /costs/{id} 
  This is to get cost report for all episodes of a show, excluding amortized costs. 
  This endpoint is designed to work for both episodic or non-episodic shows
 Response:
@@ -49,7 +49,7 @@ Note: each amount is the aggregated amount here. episode_code is unique
 
 Scenario when there is no episode cost for a show. Therefore no corresponding record in our database, throw NOT FOUND exception.
 
-# 2. POST: /costs/{id}
+# b) POST: /costs/{id}
 This endpoint is to create a cost transaction for an episode (an episode of a show, you need to provide which show this episode is for. )
  This endpoint is designed to work for both episodic or non-episodic shows
 
@@ -69,7 +69,7 @@ Request Body:
 2) 400 Validation error can be thrown, See detail in the 'bad data' section
 3) 200 Ok, scenario when no data is inserted
 
-#  3. GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
+#  c) GET: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
 
 Response:
 Note: response body is the same pattern as GET /costs/{id}
@@ -78,13 +78,13 @@ Note: response body is the same pattern as GET /costs/{id}
 
 
 
-# Database Table Created: Used in-memory h2 relational database. Table creation is located at data.sql
+# 4. Database Table Created: Used in-memory h2 relational database. Table creation is located at data.sql
 
 1) show_episode_amount(table name): this table stores each cost transaction for an episode, this table can have multiple shows, a show can have multiple episodes, a episode of a show can have multiple cost amount. Index on show_id, it can return multiple rows.
 ```
 show_id | episode_code| amount
 ```
-# “bad data”
+# 5. “bad data”
 1)  POST creation, unrecognized request body calling POST, return 400 bad request
   Reason: 'episode_co' is not a valid field
   ```
@@ -115,16 +115,20 @@ Reason: missing "id" field.
 }
 ]
 ```
-# corner cases tested
+# 6. Corner cases tested
 ```
 1) POST creation, if no record created, it should return 200 instead of 201.
 2) GET operation, if no record found, it should retun 404.
 3) POST creation, able to receive empty list, however it returns 200.
 ```
-# Things can be improved
+# 7. Things can be improved
 ```
 1) Mentioned corner cases/error case scenarios are all tested by postman. Only partial unit tests are covered. Could have better coverage on UT. FT is not added, DAO test is not added here either.
 2) For 400 validation errors, could have add detail error msgs to clients, due to limited time, won't add here.
 3) If to scale this service, could modulize the code into different modules. This current model is intended only for this code practice.
 4) Used jackson JSON library here, would better have submodule for api data model definitions as well as api definitions.
+```
+# 8. Reach out if you need help
+```
+Email: miayu79@gmail.com
 ```
