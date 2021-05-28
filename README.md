@@ -13,7 +13,7 @@ Note: This info is stored in application.properties, feel free to change to your
 ```
 # 2. Postman Collections
 
-https://www.getpostman.com/collections/32d3710e1507ccb619b2
+https://www.getpostman.com/collections/918c7e6b50da8c5482a2
 
 # 3. 3 Proposed APIs
 ###### Details can be found in the pr, attached postman request and response for better understanding.
