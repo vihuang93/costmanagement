@@ -15,7 +15,8 @@ Note: This info is stored in application.properties, feel free to change to your
 
 https://www.getpostman.com/collections/32d3710e1507ccb619b2
 
-# 3. 3 Proposed APIs(Details can be found in the pr, attached postman request and response for better understanding.)
+# 3. 3 Proposed APIs
+###### Details can be found in the pr, attached postman request and response for better understanding.
 
 Description: Get a list of aggregated costs of each episode for one show, {id} is the show id. 
 
