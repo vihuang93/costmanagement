@@ -18,12 +18,11 @@ https://www.getpostman.com/collections/32d3710e1507ccb619b2
 # 3. 3 Proposed APIs
 ###### Details can be found in the pr, attached postman request and response for better understanding.
 
-Description: Get a list of aggregated costs of each episode for one show, {id} is the show id. 
 
  ##  a) GET Operation: 
+ ###### Description: Get a list of aggregated costs of each episode for one show, excluding amortized costs, {id} is the show id. This endpoint is designed to work for both episodic or non-episodic shows
+
  ###### url path: /costs/{id} 
- This is to get cost report for all episodes of a show, excluding amortized costs. 
- This endpoint is designed to work for both episodic or non-episodic shows
 Response:
 1) 200 ok
 ```
@@ -53,8 +52,7 @@ Scenario when there is no episode cost for a show. Therefore no corresponding re
 
 ##  b) POST Operation: 
  ###### url path: /costs/{id}
-This endpoint is to create a cost transaction for an episode (an episode of a show, you need to provide which show this episode is for. )
- This endpoint is designed to work for both episodic or non-episodic shows
+###### This endpoint is to create a cost transaction for an episode (an episode of a show, you need to provide which show this episode is for.) This endpoint is designed to work for both episodic or non-episodic shows
 
 Response:
 1) 201 Created
@@ -73,7 +71,7 @@ Request Body:
 3) 200 Ok, scenario when no data is inserted
 
 ##   c) GET Operation: 
- ###### url path: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs.
+ ###### url path: /prodcosts/{id} This endpoint is to get production costs of each episode for a show, including amortized costs. This endpoint is designed to work for both episodic or non-episodic shows
 
 Response:
 Note: response body is the same pattern as GET /costs/{id}
