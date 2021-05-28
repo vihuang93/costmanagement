@@ -1,5 +1,11 @@
 # costmanagementserv
-
+# How to run this application?
+```
+1) clone this git repo
+2) do mvn clean install -U locally
+3) Go to CostmanagementservApplication.java, right click to start application
+4) Use below Postman Collection link to trigger requests
+```
 # Postman Collections
 
 https://www.getpostman.com/collections/32d3710e1507ccb619b2
