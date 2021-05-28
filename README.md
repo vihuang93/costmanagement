@@ -59,3 +59,32 @@ Response:
 1) show_episode_amount(table name): this table stores each cost transaction for an episode, this table can have multiple shows, a show can have multiple episodes, a episode of a show can have multiple cost amount. Index on show_id, it can return multiple rows.
 
 show_id | episode_code| amount
+
+# “bad data”
+1)  POST creation, unrecognized request body calling POST, return 400 bad request
+  'episode_co' is not a valid field
+     [{
+    "id":"4",
+    "episode_co":"2",
+    "amount":"200"
+    }
+    ]
+ 2)  POST creation, Episode code length != 3, , return 400 bad request
+  [{
+      "id":"4",
+      "episode_code":"1111",
+      "amount":"200"
+  }
+  ]
+3)  POST creation, request object missing field 
+[{
+    
+    "episode_code":"1111",
+    "amount":"200"
+}
+]
+# corner cases tested
+1) POST creation, if no record created, it should return 200 instead of 201.
+2) GET operation, if no record found, it should retun 404.
+3) POST creation, able to receive empty list, however it returns 200.
+
