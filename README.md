@@ -12,7 +12,7 @@ password=password
 Note: This info is stored in application.properties, feel free to change to your own on your local.
 ```
 # 2. Postman Collections
-
+###### This postman collection included happy path as well as corner cases and validation error.
 https://www.getpostman.com/collections/918c7e6b50da8c5482a2
 
 # 3. 3 Proposed APIs
