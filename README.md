@@ -1,8 +1,8 @@
 # costmanagementserv
 # How to run this application?
 ```
-1) clone this git repo
-2) do mvn clean install -U locally
+1) Clone this git repo
+2) Do mvn clean install -U locally
 3) Go to CostmanagementservApplication.java, right click to start application
 4) Use below Postman Collection link to trigger requests
 5) For database use, I used in-memory h2 relational database. Table creation is located at data.sql. 
