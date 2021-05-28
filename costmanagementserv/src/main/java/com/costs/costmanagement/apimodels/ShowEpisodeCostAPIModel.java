@@ -5,12 +5,14 @@ package com.costs.costmanagement.apimodels;
  */
 
 import com.sun.istack.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 public class ShowEpisodeCostAPIModel {
     @NotNull
     String id;
 
     @NotNull
+    @Length(min = 3, max = 3)
     String episode_code;
 
     @NotNull

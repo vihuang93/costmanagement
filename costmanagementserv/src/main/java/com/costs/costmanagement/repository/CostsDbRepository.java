@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Repository
+@Repository("costsDbRepository")
 public class CostsDbRepository {
 
     private ShowEpisodeCostDAO showEpisodeCostDAO;

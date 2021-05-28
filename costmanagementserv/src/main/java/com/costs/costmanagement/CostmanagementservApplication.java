@@ -3,6 +3,9 @@ package com.costs.costmanagement;
 import com.costs.costmanagement.apimodels.ShowEpisodeCostAPIModel;
 import com.costs.costmanagement.datamodels.ShowEpisodeCost;
 import com.costs.costmanagement.repository.CostsDbRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +23,6 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 @RestController
 public class CostmanagementservApplication {
-
 	@Autowired
 	private CostsDbRepository costsDbRepository;
 
@@ -53,17 +55,28 @@ public class CostmanagementservApplication {
 	}
 	/**
 	 *
-	 * @param showEpisodeCostList json object include list of show id, episode code, and cost amount
+	 * @param showEpisodeCostListStr json object include list of show id, episode code, and cost amount
 	 * @return created episode cost object
 	 *
 	 *  This should work for both TASK 1 & 2
 	 */
 	@PostMapping("/costs")
 	@ResponseBody
-	public ResponseEntity<List<ShowEpisodeCostAPIModel>> createCost(@RequestBody @Valid List<ShowEpisodeCostAPIModel> showEpisodeCostList) {
-
+	public ResponseEntity<List<ShowEpisodeCostAPIModel>> createCost(@RequestBody @Valid String showEpisodeCostListStr) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		List<ShowEpisodeCostAPIModel> showEpisodeCostList;
+		try {
+			showEpisodeCostList = objectMapper.readValue(showEpisodeCostListStr, new TypeReference<List<ShowEpisodeCostAPIModel>>() {
+			});
+		} catch (JsonProcessingException e){
+			return ResponseEntity.badRequest().build();
+		}
 		List<ShowEpisodeCostAPIModel> createdList = new ArrayList<>();
 		for(ShowEpisodeCostAPIModel showEpisodeCostAPIModel:showEpisodeCostList) {
+			if(showEpisodeCostAPIModel.getEpisode_code() == null || showEpisodeCostAPIModel.getAmount() == null
+					|| showEpisodeCostAPIModel.getId() == null || showEpisodeCostAPIModel.getEpisode_code().length() != 3){
+				return ResponseEntity.badRequest().build();
+			}
 			Optional<ShowEpisodeCost> createdEpisodeCost = this.costsDbRepository.createCost(Long.parseLong(showEpisodeCostAPIModel.getId()), showEpisodeCostAPIModel.getEpisode_code(),
 					Long.parseLong(showEpisodeCostAPIModel.getAmount()));
 			if(createdEpisodeCost.isPresent()){
@@ -75,11 +88,16 @@ public class CostmanagementservApplication {
 				createdList.add(createdEpisodeCostApi);
 			}
 		}
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/costs")
-				.buildAndExpand(createdList)
-				.toUri();
-		return ResponseEntity.created(uri).body(createdList);
+		if(createdList.size() > 0){
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+					.path("/costs")
+					.buildAndExpand(createdList)
+					.toUri();
+			return ResponseEntity.created(uri).body(createdList);
+		} else {
+			return ResponseEntity.ok().build();
+		}
+
 	}
 
 	/**
@@ -107,4 +125,6 @@ public class CostmanagementservApplication {
 			return ResponseEntity.ok(costReport);
 		}
 	}
+
+
 }
