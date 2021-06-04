@@ -1,44 +1,49 @@
 package com.costs.costmanagement.apimodels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.Size;
+
 /*
  This is the API model for SHOW_EPISODE_COSTS
  */
-
-import com.sun.istack.NotNull;
-import org.hibernate.validator.constraints.Length;
-
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ShowEpisodeCostAPIModel {
-    @NotNull
-    String id;
 
-    @NotNull
-    @Length(min = 3, max = 3)
-    String episode_code;
+    @JsonProperty("show_id")
+    @Size(min = 1, max = 16, message = "INVALID_STRING_LENGTH")
+    Long show_id;
 
-    @NotNull
-    String amount;
+    @JsonProperty("episode_code")
+    @Size(min = 3, max = 3, message = "INVALID_STRING_LENGTH")
+    Integer episode_code;
 
-    public String getId() {
-        return id;
+    @JsonProperty("amount")
+    Long amount;
+
+    public Long getShow_id() {
+        return show_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setShow_id(Long show_id) {
+        this.show_id = show_id;
     }
 
-    public String getEpisode_code() {
+    public Integer getEpisode_code() {
         return episode_code;
     }
 
-    public void setEpisode_code(String episode_code) {
+    public void setEpisode_code(Integer episode_code) {
         this.episode_code = episode_code;
     }
 
-    public String getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 

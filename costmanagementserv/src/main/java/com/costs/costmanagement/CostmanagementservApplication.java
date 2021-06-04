@@ -3,9 +3,6 @@ package com.costs.costmanagement;
 import com.costs.costmanagement.apimodels.ShowEpisodeCostAPIModel;
 import com.costs.costmanagement.datamodels.ShowEpisodeCost;
 import com.costs.costmanagement.repository.CostsDbRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,8 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -42,9 +39,9 @@ public class CostmanagementservApplication {
 		List<ShowEpisodeCost> doObjects = this.costsDbRepository.getAggregatEpisodeCostsForShowWithoutAmortizedCost(id);
 		List<ShowEpisodeCostAPIModel> costReport = doObjects.stream().map(doObject ->{
 			ShowEpisodeCostAPIModel apiModel = new ShowEpisodeCostAPIModel();
-			apiModel.setAmount(doObject.getAmount().toString());
-			apiModel.setEpisode_code(doObject.getEpisodeCd().toString());
-			apiModel.setId(doObject.getId().toString());
+			apiModel.setAmount(doObject.getAmount());
+			apiModel.setEpisode_code(Integer.parseInt(doObject.getEpisodeCd()));
+			apiModel.setShow_id(doObject.getShowId());
 					return apiModel; }).collect(Collectors.toList());
 
 		if (costReport.size() == 0) {
@@ -55,45 +52,32 @@ public class CostmanagementservApplication {
 	}
 	/**
 	 *
-	 * @param showEpisodeCostListStr json object include list of show id, episode code, and cost amount
+	 * @param showEpisodeCostList json object include list of show id, episode code, and cost amount
 	 * @return created episode cost object
 	 *
 	 *  This should work for both TASK 1 & 2
 	 */
 	@PostMapping("/costs")
 	@ResponseBody
-	public ResponseEntity<List<ShowEpisodeCostAPIModel>> createCost(@RequestBody @Valid String showEpisodeCostListStr) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		List<ShowEpisodeCostAPIModel> showEpisodeCostList;
-		try {
-			showEpisodeCostList = objectMapper.readValue(showEpisodeCostListStr, new TypeReference<List<ShowEpisodeCostAPIModel>>() {
-			});
-		} catch (JsonProcessingException e){
-			return ResponseEntity.badRequest().build();
-		}
-		List<ShowEpisodeCostAPIModel> createdList = new ArrayList<>();
+	public ResponseEntity<Void> createCost(@RequestBody @Valid List<ShowEpisodeCostAPIModel> showEpisodeCostList) {
+		List<ShowEpisodeCost> preparedInsertionList = new ArrayList<>();
+
 		for(ShowEpisodeCostAPIModel showEpisodeCostAPIModel:showEpisodeCostList) {
 			if(showEpisodeCostAPIModel.getEpisode_code() == null || showEpisodeCostAPIModel.getAmount() == null
-					|| showEpisodeCostAPIModel.getId() == null || showEpisodeCostAPIModel.getEpisode_code().length() != 3){
+					|| showEpisodeCostAPIModel.getShow_id() == null || String.valueOf(showEpisodeCostAPIModel.getEpisode_code()).length() != 3){
 				return ResponseEntity.badRequest().build();
 			}
-			Optional<ShowEpisodeCost> createdEpisodeCost = this.costsDbRepository.createCost(Long.parseLong(showEpisodeCostAPIModel.getId()), showEpisodeCostAPIModel.getEpisode_code(),
-					Long.parseLong(showEpisodeCostAPIModel.getAmount()));
-			if(createdEpisodeCost.isPresent()){
-				ShowEpisodeCostAPIModel createdEpisodeCostApi = new ShowEpisodeCostAPIModel();
-				createdEpisodeCostApi.setId(String.valueOf(createdEpisodeCost.get().getId()));
-				createdEpisodeCostApi.setEpisode_code(String.valueOf(createdEpisodeCost.get().getEpisodeCd()));
-				createdEpisodeCostApi.setAmount(String.valueOf(createdEpisodeCost.get().getAmount()));
-
-				createdList.add(createdEpisodeCostApi);
-			}
+			ShowEpisodeCost showEpisodeCostDO = new ShowEpisodeCost(showEpisodeCostAPIModel.getShow_id(), showEpisodeCostAPIModel.getEpisode_code().toString(),
+					showEpisodeCostAPIModel.getAmount());
+			preparedInsertionList.add(showEpisodeCostDO);
 		}
-		if(createdList.size() > 0){
+		int rowUpdated = this.costsDbRepository.createListOfCosts(preparedInsertionList);
+		if(rowUpdated > 0){
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 					.path("/costs")
-					.buildAndExpand(createdList)
+					.buildAndExpand(Collections.emptyList())
 					.toUri();
-			return ResponseEntity.created(uri).body(createdList);
+			return ResponseEntity.created(uri).build();
 		} else {
 			return ResponseEntity.ok().build();
 		}
@@ -114,9 +98,9 @@ public class CostmanagementservApplication {
 		List<ShowEpisodeCost> doObjects = this.costsDbRepository.getProductionCostsIncludingAmortizedCost(id);
 		List<ShowEpisodeCostAPIModel> costReport = doObjects.stream().map(doObject ->{
 			ShowEpisodeCostAPIModel apiModel = new ShowEpisodeCostAPIModel();
-			apiModel.setAmount(doObject.getAmount().toString());
-			apiModel.setEpisode_code(doObject.getEpisodeCd());
-			apiModel.setId(doObject.getId().toString());
+			apiModel.setAmount(doObject.getAmount());
+			apiModel.setEpisode_code(Integer.parseInt(doObject.getEpisodeCd()));
+			apiModel.setShow_id(doObject.getShowId());
 			return apiModel; }).collect(Collectors.toList());
 
 		if (costReport.size() == 0) {

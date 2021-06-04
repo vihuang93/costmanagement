@@ -10,8 +10,12 @@ import javax.persistence.*;
 public class ShowEpisodeCost {
 
     @Id
-    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "ID", updatable = false, nullable = false)
     private Long id;
+
+    @Column(name = "SHOW_ID")
+    private Long showId;
 
     @Column(name = "EPISODE_CODE")
     private String episodeCd;
@@ -22,17 +26,17 @@ public class ShowEpisodeCost {
     public ShowEpisodeCost(){}
 
     public ShowEpisodeCost(Long id, String episodeCd, Long amount){
-        this.id = id;
+        this.showId = id;
         this.episodeCd = episodeCd;
         this.amount = amount;
     }
 
-    public Long getId() {
-        return id;
+    public Long getShowId() {
+        return showId;
     }
 
     public void setID(Long id) {
-        this.id = id;
+        this.showId = id;
     }
 
     public String getEpisodeCd() {

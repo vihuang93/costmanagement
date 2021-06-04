@@ -72,9 +72,9 @@ public class CostmanagementservApplicationTests {
 		assertThat(res.getBody(), is(notNullValue()));
 		assertThat(res.getBody().size(), is(1));
 		assertThat(res.getBody().get(0), is(notNullValue()));
-		assertThat(res.getBody().get(0).getId(), is("1"));
-		assertThat(res.getBody().get(0).getEpisode_code(), is("101"));
-		assertThat(res.getBody().get(0).getAmount(), is("200"));
+		assertThat(res.getBody().get(0).getShow_id(), is(1L));
+		assertThat(res.getBody().get(0).getEpisode_code(), is(101));
+		assertThat(res.getBody().get(0).getAmount(), is(200L));
 	}
 
 	private List<ShowEpisodeCost> createNewShowEpisodeCostListWithoutAmortizedCost() {
@@ -115,14 +115,14 @@ public class CostmanagementservApplicationTests {
 		assertThat(res.getBody(), is(notNullValue()));
 		assertThat(res.getBody().size(), is(2));
 		assertThat(res.getBody().get(0), is(notNullValue()));
-		assertThat(res.getBody().get(0).getId(), is("1"));
-		assertThat(res.getBody().get(0).getEpisode_code(), is("101"));
-		assertThat(res.getBody().get(0).getAmount(), is("200"));
+		assertThat(res.getBody().get(0).getShow_id(), is(1L));
+		assertThat(res.getBody().get(0).getEpisode_code(), is(101));
+		assertThat(res.getBody().get(0).getAmount(), is(200L));
 
 		assertThat(res.getBody().get(1), is(notNullValue()));
-		assertThat(res.getBody().get(1).getId(), is("1"));
-		assertThat(res.getBody().get(1).getEpisode_code(), is("102"));
-		assertThat(res.getBody().get(1).getAmount(), is("300"));
+		assertThat(res.getBody().get(1).getShow_id(), is(1L));
+		assertThat(res.getBody().get(1).getEpisode_code(), is(102));
+		assertThat(res.getBody().get(1).getAmount(), is(300L));
 	}
 
 	@Test
@@ -137,16 +137,16 @@ public class CostmanagementservApplicationTests {
 		assertThat(res.getBody(), is(notNullValue()));
 		assertThat(res.getBody().size(), is(1));
 		assertThat(res.getBody().get(0), is(notNullValue()));
-		assertThat(res.getBody().get(0).getId(), is("1"));
-		assertThat(res.getBody().get(0).getEpisode_code(), is("101"));
-		assertThat(res.getBody().get(0).getAmount(), is("200"));
+		assertThat(res.getBody().get(0).getShow_id(), is(1L));
+		assertThat(res.getBody().get(0).getEpisode_code(), is(101));
+		assertThat(res.getBody().get(0).getAmount(), is(200L));
 	}
 
 	private ShowEpisodeCostAPIModel createNewShowEpisodeCostApiModel(long id, String episodeCd, long amount) {
 		ShowEpisodeCostAPIModel newShowEpisodeCost = new ShowEpisodeCostAPIModel();
-		newShowEpisodeCost.setId(String.valueOf(id));
-		newShowEpisodeCost.setEpisode_code(episodeCd);
-		newShowEpisodeCost.setAmount(String.valueOf(amount));
+		newShowEpisodeCost.setShow_id(id);
+		newShowEpisodeCost.setEpisode_code(Integer.parseInt(episodeCd));
+		newShowEpisodeCost.setAmount(amount);
 		return newShowEpisodeCost;
 	}
 }

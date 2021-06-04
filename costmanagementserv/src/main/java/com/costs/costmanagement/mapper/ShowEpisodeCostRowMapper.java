@@ -10,7 +10,7 @@ public class ShowEpisodeCostRowMapper implements RowMapper<ShowEpisodeCost> {
     @Override
     public ShowEpisodeCost mapRow(ResultSet resultSet, int i) throws SQLException {
         ShowEpisodeCost showEpisodeCost = new ShowEpisodeCost();
-        showEpisodeCost.setID(resultSet.getLong("ID"));
+        showEpisodeCost.setID(resultSet.getLong("SHOW_ID"));
         showEpisodeCost.setEPISODE_CODE(resultSet.getString("EPISODE_CODE"));
         showEpisodeCost.setAMOUNT(resultSet.getLong("AMOUNT"));
         return showEpisodeCost;

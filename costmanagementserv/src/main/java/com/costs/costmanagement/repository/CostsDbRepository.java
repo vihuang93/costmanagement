@@ -1,7 +1,11 @@
 package com.costs.costmanagement.repository;
 
+import com.costs.costmanagement.apimodels.ErrorDetail;
 import com.costs.costmanagement.dao.ShowEpisodeCostDAO;
 import com.costs.costmanagement.datamodels.ShowEpisodeCost;
+import com.costs.costmanagement.exceptions.InternalServiceException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
@@ -52,11 +56,11 @@ public class CostsDbRepository {
      * proportion of amortized cost = total amortized costs for a season/episodes of a season
      */
     public List<ShowEpisodeCost> getProductionCostsIncludingAmortizedCost(Long id){
-        List<ShowEpisodeCost> list = showEpisodeCostDAO.findAllEpisodeCostsByShowId(id);
+        List<ShowEpisodeCost> allEpisodeCostsForShow = showEpisodeCostDAO.findAllEpisodeCostsByShowId(id);
 
         Predicate<ShowEpisodeCost> isAmortizedCost = cost -> String.valueOf(cost.getEpisodeCd()).startsWith("0");
-        List<ShowEpisodeCost> amortizedCosts = list.stream().filter(isAmortizedCost).collect(Collectors.toList());
-        list.removeAll(amortizedCosts);
+        List<ShowEpisodeCost> amortizedCosts = allEpisodeCostsForShow.stream().filter(isAmortizedCost).collect(Collectors.toList());
+        allEpisodeCostsForShow.removeAll(amortizedCosts);
         // [key -> value]
         // season -> total amortizedCost per season
         Map<Integer, Long> seasonAmortizedCostMap = new HashMap<>();
@@ -71,7 +75,7 @@ public class CostsDbRepository {
 
         List<ShowEpisodeCost> aggregatedList = new ArrayList<>();
         // group by episode code
-        list.stream().collect(Collectors.groupingBy(ShowEpisodeCost::getEpisodeCd, Collectors.summingLong(ShowEpisodeCost::getAmount)))
+        allEpisodeCostsForShow.stream().collect(Collectors.groupingBy(ShowEpisodeCost::getEpisodeCd, Collectors.summingLong(ShowEpisodeCost::getAmount)))
                 .forEach((cd,sumTargetCost)->aggregatedList.add(new ShowEpisodeCost(id, cd,sumTargetCost)));
         // [key -> value]
         // season -> count of episode per season
@@ -87,6 +91,7 @@ public class CostsDbRepository {
         for(Map.Entry<Integer, Long> entry:seasonAmortizedCostMap.entrySet()){
             int season = entry.getKey();
             long totalAmortizedCost = entry.getValue();
+            //TODO: Take care of scenario when amortized cost can't be evenly divided
             long amortizedCostPerEpisode = totalAmortizedCost/seasonEpisodeCountMap.get(season);
             seasonAmortizedCostMap.put(season, amortizedCostPerEpisode);
         }
@@ -117,5 +122,24 @@ public class CostsDbRepository {
         } else {
             return Optional.empty();
         }
+    }
+    /**
+     *
+     * @param episodeCosts List of episode costs
+     * @return number of rows updated
+     */
+    public int createListOfCosts(List<ShowEpisodeCost> episodeCosts){
+        int updatedRow = 0;
+        if(episodeCosts.size() > 0){
+            try {
+                updatedRow = showEpisodeCostDAO.batchInsertEpisodeCost(episodeCosts);
+            } catch (DataAccessException e) {
+                // TODO:loggings
+                ErrorDetail errorDetail = new ErrorDetail(HttpStatus.INTERNAL_SERVER_ERROR, "DATA_ACCESS_EXCEPTION",
+                        "episode cost insertion failed");
+                throw new InternalServiceException(errorDetail);
+            }
+        }
+        return updatedRow;
     }
 }
